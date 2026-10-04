@@ -1,6 +1,10 @@
 package baseNoStates.requests;
 
 import baseNoStates.Actions;
+import baseNoStates.DirectoryAreas;
+import baseNoStates.Door;
+import baseNoStates.User;
+import baseNoStates.areas.Area;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -14,7 +18,6 @@ public class RequestArea implements Request {
   private final String areaId;
   private final LocalDateTime now;
   private ArrayList<RequestReader> requests = new ArrayList<>();
-
 
   public RequestArea(String credential, String action, LocalDateTime now, String areaId) {
     this.credential = credential;
@@ -39,7 +42,6 @@ public class RequestArea implements Request {
       jsonRequests.put(rd.answerToJson());
     }
     json.put("requestsDoors", jsonRequests);
-    json.put("todo", "request areas not yet implemented");
     return json;
   }
 
@@ -64,19 +66,10 @@ public class RequestArea implements Request {
   // them to all of its doors. For some it may be authorized and action will be done, for others
   // it won't be authorized and nothing will happen to them.
   public void process() {
-    // commented out until Area, Space and Partition are implemented
-
-    /*
     // make the door requests and put them into the area request to be authorized later and
     // processed later
     Area area = DirectoryAreas.findAreaById(areaId);
-    // an Area is a Space or a Partition
     if (area != null) {
-      // is null when from the app we click on an action but no place is selected because
-      // there (flutter) I don't control like I do in javascript that all the parameters are provided
-
-      // Make all the door requests, one for each door in the area, and process them.
-      // Look for the doors in the spaces of this area that give access to them.
       for (Door door : area.getDoorsGivingAccess()) {
         RequestReader requestReader = new RequestReader(credential, action, now, door.getId());
         requestReader.process();
@@ -85,6 +78,5 @@ public class RequestArea implements Request {
         requests.add(requestReader);
       }
     }
-     */
   }
 }
