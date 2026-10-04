@@ -1,6 +1,6 @@
 package baseNoStates.requests;
 
-import baseNoStates.DirectoryDoors;
+import baseNoStates.DirectoryAreas;
 import baseNoStates.DirectoryUsers;
 import baseNoStates.Door;
 import baseNoStates.User;
@@ -78,7 +78,7 @@ public class RequestReader implements Request {
   // if authorized, perform the action.
   public void process() {
     User user = DirectoryUsers.findUserByCredential(credential);
-    Door door = DirectoryDoors.findDoorById(doorId);
+    Door door = DirectoryAreas.findDoorById(doorId);
     assert door != null : "door " + doorId + " not found";
     authorize(user, door);
     // this sets the boolean authorize attribute of the request
@@ -90,15 +90,26 @@ public class RequestReader implements Request {
 
   // the result is put into the request object plus, if not authorized, why not,
   // only for testing
-  private void authorize(User user, Door door) {
-    if (user == null) {
+  private void authorize(User user, Door door) { // early return pattern
+    if (user == null) { // Compravacion que exista el usuario
       authorized = false;
       addReason("user doesn't exists");
-    } else {
-      //TODO: get the who, where, when and what in order to decide, and if not
-      // authorized add the reason(s)
-      authorized = true;
+      return;
     }
+    // ¿User puede estar en el Space(From)?
+    if (!user.canBeInSpace(door.getFromSpace())) {
+      addReason("User cannot be in space " + door.getFromSpace().getId());
+      return;
+    }
+
+    // ¿User puede estar en el Space(To)?
+    if (!user.canBeInSpace(door.getToSpace())) {
+      addReason("User cannot be in space " + door.getToSpace().getId());
+      return;
+    }
+
+    // Si tiene permiso de estar en ambos Spaces
+    authorized = true;
   }
 }
 

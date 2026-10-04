@@ -1,5 +1,6 @@
 package baseNoStates;
 
+import baseNoStates.areas.Space;
 import baseNoStates.doorstates.DoorState;
 import baseNoStates.doorstates.Unlocked;
 import baseNoStates.requests.RequestReader;
@@ -9,12 +10,16 @@ public class Door {
   private final String id;
   private boolean closed; // physically
   private DoorState state;
+  private Space fromSpace;
+  private Space toSpace;
 
 
-  public Door(String id) {
+  public Door(String id, Space from, Space to) {
     this.id = id;
     closed = true;
     state = new Unlocked(this); // unlocked de manera inicial
+    this.fromSpace = from;
+    this.toSpace = to;
   }
 
   public void processRequest(RequestReader request) {
@@ -92,5 +97,13 @@ public class Door {
 
   public void setState(DoorState state) {
     this.state = state;
+  }
+
+  public Space getFromSpace() {
+    return fromSpace;
+  }
+
+  public Space getToSpace() {
+    return toSpace;
   }
 }

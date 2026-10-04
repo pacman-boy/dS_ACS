@@ -12,31 +12,50 @@ public final class DirectoryUsers {
     // users without any privilege, just to keep temporally users instead of deleting them,
     // this is to withdraw all permissions but still to keep user data to give back
     // permissions later
-    users.add(new User("Bernat", "12345"));
-    users.add(new User("Blai", "77532"));
+    User Bernat = new User("Bernat", "12345");
+    users.add(Bernat);
+    User Blai = new User("Blai", "77532");
+    users.add(Blai);
 
     // employees :
     // Sep. 1 this year to Mar. 1 next year
     // week days 9-17h
     // just shortly unlock
     // ground floor, floor1, exterior, stairs (this, for all), that is, everywhere but the parking
-    users.add(new User("Ernest", "74984"));
-    users.add(new User("Eulalia", "43295"));
+    User ernest = new User("ernest", "74984");
+    ernest.addArea(DirectoryAreas.findAreaById("ground_floor"));
+    ernest.addArea(DirectoryAreas.findAreaById("floor1"));
+    ernest.addArea(DirectoryAreas.findAreaById("exterior"));
+    ernest.addArea(DirectoryAreas.findAreaById("stairs"));
+    users.add(ernest);
+    User eulalia = new User("eulalia", "43295");
+    eulalia.addArea(DirectoryAreas.findAreaById("ground_floor"));
+    ernest.addArea(DirectoryAreas.findAreaById("ground_floor"));
+    ernest.addArea(DirectoryAreas.findAreaById("floor1"));
+    ernest.addArea(DirectoryAreas.findAreaById("exterior"));
+    ernest.addArea(DirectoryAreas.findAreaById("stairs"));
+    users.add(eulalia);
 
     // managers :
     // Sep. 1 this year to Mar. 1 next year
     // week days + saturday, 8-20h
     // all actions
     // all spaces
-    users.add(new User("Manel", "95783"));
-    users.add(new User("Marta", "05827"));
+    User manel = new User("manel", "95783");
+    manel.addArea(DirectoryAreas.findAreaById("building"));
+    users.add(manel);
+    User marta = new User("Marta", "05827");
+    manel.addArea(DirectoryAreas.findAreaById("building"));
+    users.add(marta);
 
     // admin :
     // always=Jan. 1 this year to 2100
     // all days of the week
     // all actions
     // all spaces
-    users.add(new User("Ana", "11343"));
+    User ana = new User("Ana", "11343");
+    ana.addArea(DirectoryAreas.findAreaById("building"));
+    users.add(ana);
   }
 
   public static User findUserByCredential(String credential) {
