@@ -62,19 +62,12 @@ public class RequestArea implements Request {
             + "}";
   }
 
-  // processing the request of an area is creating the corresponding door requests and forwarding
-  // them to all of its doors. For some it may be authorized and action will be done, for others
-  // it won't be authorized and nothing will happen to them.
-  public void process() {
-    // make the door requests and put them into the area request to be authorized later and
-    // processed later
+  public void process() { // Lock and Unlock all dors in one Partition
     Area area = DirectoryAreas.findAreaById(areaId);
     if (area != null) {
       for (Door door : area.getDoorsGivingAccess()) {
         RequestReader requestReader = new RequestReader(credential, action, now, door.getId());
         requestReader.process();
-        // after process() the area request contains the answer as the answer
-        // to each individual door request, that is read by the simulator/Flutter app
         requests.add(requestReader);
       }
     }
