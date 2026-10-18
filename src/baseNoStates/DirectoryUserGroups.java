@@ -33,11 +33,6 @@ public class DirectoryUserGroups {
     administrator.addAction(Actions.UNLOCK_SHORTLY);
     // No es necesario añadir un horario ya que tienen acceso siempre.
     userGroups.add(administrator);
-    administrator.addAction(Actions.OPEN);
-    administrator.addAction(Actions.CLOSE);
-    administrator.addAction(Actions.LOCK);
-    administrator.addAction(Actions.UNLOCK);
-    administrator.addAction(Actions.UNLOCK_SHORTLY);
 
     UserGroup manager = new UserGroup("Manager");
     User manel = new User("Manel", "95783");
@@ -66,11 +61,6 @@ public class DirectoryUserGroups {
         daysManager, LocalTime.of(8, 0), LocalTime.of(20, 0));
     manager.addSchedule(managerSchedule);
     userGroups.add(manager);
-    manager.addAction(Actions.OPEN);
-    manager.addAction(Actions.CLOSE);
-    manager.addAction(Actions.LOCK);
-    manager.addAction(Actions.UNLOCK);
-    manager.addAction(Actions.UNLOCK_SHORTLY);
 
     UserGroup employee = new UserGroup("Employee");
     User ernest = new User("Ernest", "74984");
@@ -99,9 +89,6 @@ public class DirectoryUserGroups {
         daysEmployee, LocalTime.of(9, 0), LocalTime.of(17, 0));
     employee.addSchedule(employeeSchedule);
     userGroups.add(employee);
-    employee.addAction(Actions.OPEN);
-    employee.addAction(Actions.CLOSE);
-    employee.addAction(Actions.UNLOCK_SHORTLY);
   }
 
   public static User findUserByCredential(String credential) {

@@ -3,6 +3,7 @@ package baseNoStates;
 import baseNoStates.areas.Area;
 import baseNoStates.areas.Space;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class User {
