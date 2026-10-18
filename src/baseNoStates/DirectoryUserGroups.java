@@ -22,6 +22,11 @@ public class DirectoryUserGroups {
     administrator.addUser(ana);
     administrator.addArea(DirectoryAreas.findAreaById("building"));
     userGroups.add(administrator);
+    administrator.addAction(Actions.OPEN);
+    administrator.addAction(Actions.CLOSE);
+    administrator.addAction(Actions.LOCK);
+    administrator.addAction(Actions.UNLOCK);
+    administrator.addAction(Actions.UNLOCK_SHORTLY);
 
     UserGroup manager = new UserGroup("Manager");
     User manel = new User("Manel", "95783");
@@ -32,6 +37,11 @@ public class DirectoryUserGroups {
     manager.addUser(marta);
     manager.addArea(DirectoryAreas.findAreaById("building"));
     userGroups.add(manager);
+    manager.addAction(Actions.OPEN);
+    manager.addAction(Actions.CLOSE);
+    manager.addAction(Actions.LOCK);
+    manager.addAction(Actions.UNLOCK);
+    manager.addAction(Actions.UNLOCK_SHORTLY);
 
     UserGroup employee = new UserGroup("Employee");
     User ernest = new User("ernest", "74984");
@@ -45,6 +55,9 @@ public class DirectoryUserGroups {
     employee.addArea(DirectoryAreas.findAreaById("exterior"));
     employee.addArea(DirectoryAreas.findAreaById("stairs"));
     userGroups.add(employee);
+    employee.addAction(Actions.OPEN);
+    employee.addAction(Actions.CLOSE);
+    employee.addAction(Actions.UNLOCK_SHORTLY);
   }
 
   public static User findUserByCredential(String credential) {

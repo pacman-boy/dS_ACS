@@ -21,6 +21,14 @@ public class User {
     }
     return userGroup.canBeInSpace(sp);
   }
+
+  public boolean canDoAction(String action){
+    if(userGroup == null) {
+      return false;
+    }
+    return userGroup.canDoAction(action);
+  }
+
   public String getCredential() {
     return credential;
   }

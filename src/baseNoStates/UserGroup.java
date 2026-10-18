@@ -9,11 +9,13 @@ public class UserGroup {
   private final ArrayList<User> users;
   private final String groupName;
   private ArrayList<Area> areas;
+  private  ArrayList<String> actions;
 
   public UserGroup(String name) {
     this.groupName = name;
     users = new ArrayList<User>();
     areas = new ArrayList<Area>();
+    actions = new ArrayList<String>();
   }
   public User findUserByCredential(String credential) {
     for (User user : users) {
@@ -33,9 +35,15 @@ public class UserGroup {
     }
     return false;
   }
+  public boolean canDoAction(String action){
+    return actions.contains(action);
+  }
 
   public String getName() {
     return groupName;
+  }
+  public void addAction(String action){
+    actions.add(action);
   }
   public void addUser(User user) {
     users.add(user);
