@@ -1,15 +1,27 @@
 @startuml
 'https://plantuml.com/class-diagram
 skinparam classAttributeIconSize 0
+set namespaceSeparator none
 
-class Webserver {
-- {static} PORT :int
+class Main {
++ {static} main(args : String[])
+}
+
+note right of Main::main
+DirectoryAreas.makeAreas()
+DirectoryUserGroups.makeUsersGroups()
+Door.getClock().start()
+new WebServer()
+end note
+
+class WebServer {
+- {static} PORT : int
 - {static} FORMATTER : DateTimeFormatter
-+ Webserver()
++ WebServer()
 }
 
 class SocketThread {
-- insocked : Socked
+- insocked : Socket
 - makeRequest(tokens : String[]) : Request
 - makeRequestReader(tokens : String[]) : RequestReader
 - makeRequestArea(tokens : String[]) : RequestArea
@@ -18,64 +30,233 @@ class SocketThread {
 + run()
 }
 
-Webserver +-right- SocketThread
+WebServer +-right- SocketThread
 
 note right of SocketThread
 inner class
-of Webserver
+of WebServer
 end note
 
-class DirectoryDoors {
+class DirectoryAreas {
+- {static} rootArea : Area
 - {static} allDoors : Door[]
-+ {static} makeDoors()
++ {static} makeAreas()
++ {static} findAreaById(id : String) : Area
 + {static} findDoorById(id : String) : Door
 + {static} getAllDoors() : Door[]
 }
 
-DirectoryDoors --> "*" Door : "allDoors"
+package areas {
+  abstract class Area {
+  # id : String
+  + Area(id : String)
+  + {abstract} getDoorsGivingAccess() : Door[]
+  + {abstract} findAreabyId(id : String) : Area
+  + {abstract} getSpaces() : Space[]
+  + {abstract} getId() : String
+  }
 
-class DirectoryUsers {
-- {static} users : User[]
-+ {static} makeUsers()
-+ {static} findUserByCredential(credential : String) : User
+  class Partition extends Area {
+  - area : Area[]
+  + Partition(id : String)
+  + getDoorsGivingAccess() : Door[]
+  + findAreabyId(id : String) : Area
+  + getSpaces() : Space[]
+  + getId() : String
+  + addArea(area : Area)
+  }
+
+  class Space extends Area {
+  - doors : Door[]
+  + Space(id : String)
+  + getDoorsGivingAccess() : Door[]
+  + findAreabyId(id : String) : Area
+  + getSpaces() : Space[]
+  + getId() : String
+  + addDoor(door : Door)
+  }
+
+  Partition *--> "*" Area : "area"
 }
-
-DirectoryUsers --> "*" User : "users"
 
 class Door {
 - id : String
 - closed : boolean
-+ Door(id : String)
+- {static} clock : Clock
++ Door(id : String, from : Space, to : Space)
 + processRequest(request : RequestReader)
-+ setState(doorState : DoorState)
++ setState(state : DoorState)
 + toJson() : JSONObject
-'+ toString() : String
-'+ isClosed() :boolean
-'+ setClosed(b : boolean)
-'+ getStateName() : String
++ toString() : String
++ isClosed() : boolean
++ setClosed(closed : boolean)
++ getStateName() : String
++ getState() : DoorState
++ getFromSpace() : Space
++ getToSpace() : Space
++ {static} getClock() : Clock
 - doAction(action : String)
 }
 
+DirectoryAreas --> "1" Area : "rootArea"
+DirectoryAreas --> "*" Door : "allDoors"
+Space --> "*" Door : "doors"
+Door --> "1" Space : "fromSpace"
+Door --> "1" Space : "toSpace"
+
+class Actions {
++ {static} LOCK : String
++ {static} UNLOCK : String
++ {static} UNLOCK_SHORTLY : String
++ {static} OPEN : String
++ {static} CLOSE : String
+}
+
+package java.util {
+  abstract class Observable {
+  + addObserver(o : Observer)
+  + deleteObserver(o : Observer)
+  + setChanged()
+  + notifyObservers()
+  }
+
+  interface Observer {
+  + {abstract} update(o : Observable, arg : Object)
+  }
+
+  Observable o--> "*" Observer : "observers"
+}
+
+package doorstates {
+  abstract class DoorState {
+  # door : Door
+  # state : String
+  + DoorState(door : Door)
+  + getStateName() : String
+  + {abstract} open()
+  + {abstract} close()
+  + {abstract} lock()
+  + {abstract} unlock()
+  + {abstract} unlockShortly()
+  }
+
+  class Unlocked extends DoorState {
+  + Unlocked(door : Door)
+  + open()
+  + close()
+  + lock()
+  + unlock()
+  + unlockShortly()
+  }
+
+  class Locked extends DoorState {
+  + Locked(door : Door)
+  + open()
+  + close()
+  + lock()
+  + unlock()
+  + unlockShortly()
+  }
+
+  class UnlockedShortly extends DoorState implements Observer {
+  - remainingSeconds : int
+  + UnlockedShortly(door : Door)
+  + open()
+  + close()
+  + lock()
+  + unlock()
+  + unlockShortly()
+  + update(o : Observable, arg : Object)
+  }
+
+  class Propped extends DoorState {
+  + Propped(door : Door)
+  + open()
+  + close()
+  + lock()
+  + unlock()
+  + unlockShortly()
+  }
+
+  class States {
+  + {static} LOCKED : String
+  + {static} UNLOCKED : String
+  + {static} UNLOCKED_SHORTLY : String
+  + {static} PROPPED : String
+  }
+}
+
+class Clock extends Observable {
+- date : LocalDateTime
+- timer : Timer
+- period : int
++ Clock(period : int)
++ start()
++ stop()
++ getPeriod() : int
++ getDate() : LocalDateTime
+}
+
+Door "1" <--> "1" DoorState : "door / state"
+Door --> "1" Clock : "clock"
+UnlockedShortly ..> Clock : "observes (Door.getClock())"
+
+note bottom of UnlockedShortly
+Observer of Clock:
+Door.getClock().addObserver(this)
+After 10s in update(), unsubscribes and
+sets state to Locked or Propped
+end note
+
+class DirectoryUserGroups {
+- {static} userGroups : UserGroup[]
++ {static} makeUsersGroups()
++ {static} findUserByCredential(credential : String) : User
+}
+
+class UserGroup {
+- groupName : String
+- actions : String[]
++ UserGroup(name : String)
++ findUserByCredential(credential : String) : User
++ canBeInSpace(sp : Space) : boolean
++ canDoAction(action : String) : boolean
++ canDoActionNow(now : LocalDateTime) : boolean
++ getName() : String
++ addUser(user : User)
++ addArea(area : Area)
++ addAction(action : String)
++ addSchedule(schedule : Schedule)
+}
 
 class User {
 - name : String
 - credential : String
-+ User(name: String, credential: String)
++ User(name : String, credential : String)
++ canBeInSpace(sp : Space) : boolean
++ canDoAction(action : String) : boolean
++ canDoActionNow(now : LocalDateTime) : boolean
++ getCredential() : String
++ setUserGroup(userGroup : UserGroup)
 + toString() : String
 }
 
-
-class Main {
-+ {static} main(args : String)
+class Schedule {
+- startDate : LocalDate
+- endDate : LocalDate
+- daysOfWeek : DayOfWeek[]
+- startTime : LocalTime
+- endTime : LocalTime
++ Schedule(startDate : LocalDate, endDate : LocalDate, daysOfWeek : DayOfWeek[], startTime : LocalTime, endTime : LocalTime)
++ canSendRequests(now : LocalDateTime) : boolean
 }
 
-note right of Main::main
-DirectoryDoors.makeDoors()
-DiretoryUsers.makeUsers()
-new Webserver()
-end note
+DirectoryUserGroups o--> "1..*" UserGroup : "userGroups"
+UserGroup "1" *--> "*" User : "users"
+UserGroup --> "*" Area : "areas"
+UserGroup --> "0..1" Schedule : "schedule"
 
-Main -[hidden]down- Webserver
-Webserver -[hidden]down- DirectoryDoors
-DirectoryDoors -[hidden]right- DirectoryUsers
+Main -[hidden]down- WebServer
+WebServer -[hidden]down- DirectoryAreas
+DirectoryAreas -[hidden]right- DirectoryUserGroups
 @enduml
