@@ -9,24 +9,17 @@ public class User {
   private final String name;
   private final String credential;
   private UserGroup userGroup;
-  private ArrayList<Area> areas;
 
   public User(String name, String credential) {
     this.name = name;
     this.credential = credential;
-    areas = new ArrayList<>();
   }
 
-  private ArrayList<Space> getSpaces(){
-    ArrayList<Space> spaces = new ArrayList<>();
-    for (Area area : areas) {
-      spaces.addAll(area.getSpaces());
+  public boolean canBeInSpace(Space sp) { // Comprova si l'usuari pot estar en l'espai comprovant les areas del seu grup.
+    if (userGroup == null) {
+      return false;
     }
-    return spaces;
-  }
-
-  public boolean canBeInSpace(Space sp){
-    return getSpaces().contains(sp);
+    return userGroup.canBeInSpace(sp);
   }
   public String getCredential() {
     return credential;
@@ -37,8 +30,8 @@ public class User {
     return "User{name=" + name + ", credential=" + credential + "}";
   }
 
-  public void addArea(Area area){
-    areas.add(area);
+  public void setUserGroup(UserGroup userGroup){
+    this.userGroup = userGroup;
   }
 
 }
