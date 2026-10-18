@@ -12,6 +12,7 @@ public class Door {
   private DoorState state;
   private Space fromSpace;
   private Space toSpace;
+  private static final Clock clock = new Clock(1);
 
 
   public Door(String id, Space from, Space to) {
@@ -49,8 +50,7 @@ public class Door {
         state.unlock();
         break;
       case Actions.UNLOCK_SHORTLY:
-        // TODO
-        System.out.println("Action " + action + " not implemented yet");
+        state.unlockShortly();
         break;
       default:
         assert false : "Unknown action " + action;
@@ -72,6 +72,14 @@ public class Door {
 
   public DoorState getState() {
     return state;
+  }
+
+  public Space getFromSpace() {
+    return fromSpace;
+  }
+
+  public Space getToSpace() {
+    return toSpace;
   }
 
   @Override
@@ -99,11 +107,7 @@ public class Door {
     this.state = state;
   }
 
-  public Space getFromSpace() {
-    return fromSpace;
-  }
-
-  public Space getToSpace() {
-    return toSpace;
+  public static Clock getClock() {
+    return clock;
   }
 }
