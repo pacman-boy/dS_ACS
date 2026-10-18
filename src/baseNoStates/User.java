@@ -22,11 +22,18 @@ public class User {
     return userGroup.canBeInSpace(sp);
   }
 
-  public boolean canDoAction(String action){
-    if(userGroup == null) {
+  public boolean canDoAction(String action) { // Comprova si l'usuari pot fer una accio comprovant les accions del seu grup.
+    if (userGroup == null) {
       return false;
     }
     return userGroup.canDoAction(action);
+  }
+
+  public boolean canDoActionNow(LocalDateTime now) {
+    if (userGroup == null) {
+      return false;
+    }
+    return userGroup.canDoActionNow(now);
   }
 
   public String getCredential() {

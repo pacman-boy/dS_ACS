@@ -79,30 +79,42 @@ public class RequestReader implements Request {
     Door door = DirectoryAreas.findDoorById(doorId);
     assert door != null : "door " + doorId + " not found";
     authorize(user, door);
-    // this sets the boolean authorize attribute of the request
+    // this sets the boolean authorize a y que parte del codigo comprueba al hcaer reader las acciones de ese grupo?ttribute of the request
     door.processRequest(this);
     // even if not authorized we process the request, so that if desired we could log all
     // the requests made to the server as part of processing the request
     doorClosed = door.isClosed();
   }
 
-  // the result is put into the request object plus, if not authorized, why not,
-  // only for testing
-  private void authorize(User user, Door door) { // early return pattern
+  private void authorize(User user, Door door) { // Comprobar si el usuario tiene permiso para acceder a la puerta segun su grupo y la accion que quiere realizar.
     if (user == null) { // Compravacion que exista el usuario
       authorized = false;
       addReason("user doesn't exists");
       return;
     }
-    // ¿User puede estar en el Space(From)?
+    // user (Who)
+
+    // ¿User puede hacer la accion ahora? (When)
+    if (!user.canDoActionNow(now)) {
+      addReason("User cannot do " + action + " now");
+      return;
+    }
+
+    // ¿User puede estar en el Space(From)? (Where)
     if (!user.canBeInSpace(door.getFromSpace())) {
       addReason("User cannot be in space " + door.getFromSpace().getId());
       return;
     }
 
-    // ¿User puede estar en el Space(To)?
+    // ¿User puede estar en el Space(To)? (Where)
     if (!user.canBeInSpace(door.getToSpace())) {
       addReason("User cannot be in space " + door.getToSpace().getId());
+      return;
+    }
+
+    // Comprobación de la acción permitida (What)
+    if (!user.canDoAction(action)) {
+      addReason("User cannot do " + action);
       return;
     }
 
