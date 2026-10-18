@@ -112,21 +112,6 @@ class Actions {
 + {static} CLOSE : String
 }
 
-package java.util {
-  abstract class Observable {
-  + addObserver(o : Observer)
-  + deleteObserver(o : Observer)
-  + setChanged()
-  + notifyObservers()
-  }
-
-  interface Observer {
-  + {abstract} update(o : Observable, arg : Object)
-  }
-
-  Observable o--> "*" Observer : "observers"
-}
-
 package doorstates {
   abstract class DoorState {
   # door : Door
@@ -158,7 +143,7 @@ package doorstates {
   + unlockShortly()
   }
 
-  class UnlockedShortly extends DoorState implements Observer {
+  class UnlockedShortly extends DoorState {
   - remainingSeconds : int
   + UnlockedShortly(door : Door)
   + open()
@@ -186,7 +171,7 @@ package doorstates {
   }
 }
 
-class Clock extends Observable {
+class Clock {
 - date : LocalDateTime
 - timer : Timer
 - period : int
@@ -199,14 +184,7 @@ class Clock extends Observable {
 
 Door "1" <--> "1" DoorState : "door / state"
 Door --> "1" Clock : "clock"
-UnlockedShortly ..> Clock : "observes (Door.getClock())"
-
-note bottom of UnlockedShortly
-Observer of Clock:
-Door.getClock().addObserver(this)
-After 10s in update(), unsubscribes and
-sets state to Locked or Propped
-end note
+UnlockedShortly ..> Clock : "observes"
 
 class DirectoryUserGroups {
 - {static} userGroups : UserGroup[]

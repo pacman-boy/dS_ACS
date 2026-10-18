@@ -17,7 +17,7 @@ public class Space extends Area{ // Espacios individuales: Parking, room 1...
 
   @Override
   public Area findAreabyId(String id) {
-    if (this.id.equals(id)){ // IDE recomienda para strings mejor equals
+    if (this.id.equals(id)){
       return this;
     }
     return null;

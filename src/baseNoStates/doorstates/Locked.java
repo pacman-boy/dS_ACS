@@ -4,7 +4,7 @@ import baseNoStates.Door;
 
 public class Locked extends DoorState {
   public Locked(Door door) {
-    super(door); // Llama al constructor de la clase padre (DoorState) para guardar la referencia de la puerta.
+    super(door);
     state = States.LOCKED;
   }
 
