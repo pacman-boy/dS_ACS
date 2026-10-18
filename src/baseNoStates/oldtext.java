@@ -2,10 +2,14 @@ package baseNoStates;
 
 import java.util.ArrayList;
 
-public final class DirectoryUsers {
-  private static final ArrayList<User> users = new ArrayList<>();
+public class oldtext {
+  private static ArrayList<UserGroup> UserGroups;
 
-  public static void makeUsers() {
+  public oldtext() {
+    UserGroups = new ArrayList<UserGroup>();
+  }
+
+  public static void makeUsersGroups() {
     //TODO: make user groups according to the specifications in the comments, because
     // now all are the same
 
@@ -59,13 +63,14 @@ public final class DirectoryUsers {
   }
 
   public static User findUserByCredential(String credential) {
-    for (User user : users) {
-      if (user.getCredential().equals(credential)) {
+    for (UserGroup group : UserGroups) {
+      User user = group.findUserByCredential(credential);
+      if (user != null) {
         return user;
       }
     }
     System.out.println("user with credential " + credential + " not found");
     return null; // otherwise we get a Java error
   }
-
 }
+
