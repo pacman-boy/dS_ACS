@@ -1,7 +1,7 @@
 package baseNoStates.doorstates;
 
 import baseNoStates.Door;
-
+// Estat concret del patró State. Impedeix obrir la porta fins que passi a Unlocked o UnlockedShortly.
 public class Locked extends DoorState {
   public Locked(Door door) {
     super(door);

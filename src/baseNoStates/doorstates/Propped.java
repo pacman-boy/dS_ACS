@@ -1,7 +1,8 @@
 package baseNoStates.doorstates;
 
 import baseNoStates.Door;
-
+// Estat concret del patró State. S'hi arriba quan la porta segueix oberta després dels 10s d'UnlockedShortly;
+// en tancar-la físicament (close), passa automàticament a l'estat Locked.
 public class Propped extends DoorState {
   public Propped(Door door) {
     super(door);

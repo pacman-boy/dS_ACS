@@ -5,7 +5,9 @@ import baseNoStates.doorstates.DoorState;
 import baseNoStates.doorstates.Unlocked;
 import baseNoStates.requests.RequestReader;
 import org.json.JSONObject;
-
+// Patró State: delega les accions (open, close, lock, unlock, unlockShortly) al seu estat actual
+// Coneix fromSpace i toSpace perquè RequestReader pugui comprovar si l'usuari té permís en tots dos espais.
+// Comparteix una única instància estàtica de Clock entre totes les portes per notificar l'estat UnlockedShortly.
 public class Door {
   private final String id;
   private boolean closed; // physically

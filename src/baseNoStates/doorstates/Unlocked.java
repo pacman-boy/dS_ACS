@@ -1,6 +1,7 @@
 package baseNoStates.doorstates;
 
 import baseNoStates.Door;
+//Permet obrir i tancar la porta, i bloquejar-la només si està físicament tancada.
 
 public class Unlocked extends DoorState {
   public Unlocked(Door door){
