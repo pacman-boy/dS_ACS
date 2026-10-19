@@ -5,7 +5,8 @@ import baseNoStates.areas.Space;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
+// Centralitza els permisos d'accés d'un rol (àrees permeses, accions i horari Schedule)
+// per compartir-los entre tots els usuaris del mateix grup sense duplicar informació a cada User.
 public class UserGroup {
   private final ArrayList<User> users;
   private final String groupName;

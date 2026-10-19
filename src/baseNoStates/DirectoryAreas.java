@@ -6,7 +6,7 @@ import baseNoStates.areas.Space;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
+// Construeix i manté l'arbre jeràrquic d'àrees (rootArea) i la llista de portes de l'edifici
 public final class DirectoryAreas {
   private static ArrayList<Door> allDoors;
   private static Area rootArea;

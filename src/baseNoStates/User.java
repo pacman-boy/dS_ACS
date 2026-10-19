@@ -5,7 +5,7 @@ import baseNoStates.areas.Space;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
+// Representa un usuari individual i delega les comprovacions de permisos (espai, acció i horari) al seu UserGroup
 public class User {
   private final String name;
   private final String credential;

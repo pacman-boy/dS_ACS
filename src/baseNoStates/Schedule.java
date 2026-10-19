@@ -5,7 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-
+// Encapsula les restriccions temporals (interval de dates, dies de la setmana i franja horària)
+// en què un UserGroup té permís per enviar peticions.
 public class Schedule {
   private final LocalDate startDate;
   private final LocalDate endDate;

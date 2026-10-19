@@ -5,6 +5,8 @@ import baseNoStates.Door;
 
 import java.util.Observable;
 import java.util.Observer;
+// Forma part del patro state i patro Observer (Clock)
+// Quan passa aaquest estat es subscriu al Clock 10 segons i es desubscriu
 
 public class UnlockedShortly extends DoorState implements Observer {
   private int remainingSeconds = 10;

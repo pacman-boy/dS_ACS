@@ -11,7 +11,8 @@ import org.json.JSONObject;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-
+// Obté totes les portes que donen accés a l'àrea
+// i processa una RequestReader individual per a cadascuna.
 public class RequestArea implements Request {
   private final String credential;
   private final String action;

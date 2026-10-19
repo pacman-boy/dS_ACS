@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
-
+//patró observer. Classes implicades: Clock i UnlockedShortly.
+// Executa un Timer en paral·lel que notifica cada segon als estats UnlockedShortly subscrits
+// sense bloquejar l'execució del servidor principal.
 public class Clock extends Observable {
   private LocalDateTime date;
   private Timer timer;
