@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+
 // Encapsula les restriccions temporals (interval de dates, dies de la setmana i franja horària)
 // en què un UserGroup té permís per enviar peticions.
 public class Schedule {
@@ -25,20 +26,19 @@ public class Schedule {
 
   public boolean canSendRequests(LocalDateTime now) {
     LocalDate date = now.toLocalDate(); // solo la fecha
-    if (date.isBefore(startDate) || date.isAfter(endDate)) { // compruebo que la fecha está dentro del rango permitido
+    // compruebo que la fecha está dentro del rango permitido
+    if (date.isBefore(startDate) || date.isAfter(endDate)) {
       return false;
     }
 
     DayOfWeek day = now.getDayOfWeek();
-    if (!daysOfWeek.contains(day)) { // compruebo que el día de la semana está dentro del rango permitido
+    // compruebo que el día de la semana está dentro del rango permitido
+    if (!daysOfWeek.contains(day)) {
       return false;
     }
 
     LocalTime time = now.toLocalTime();
-    if (time.isBefore(startTime) || time.isAfter(endTime)) { // compruebo que la hora está dentro del rango permitido
-      return false;
-    }
-
-    return true;
+    // compruebo que la hora está dentro del rango permitido
+    return !time.isBefore(startTime) && !time.isAfter(endTime);
   }
 }

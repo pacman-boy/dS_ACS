@@ -5,9 +5,9 @@ package baseNoStates;
 
 public class Main {
   public static void main(String[] args) {
-    DirectoryAreas.makeAreas();
-    DirectoryUserGroups.makeUsersGroups();
-    Door.getClock().start();
+    // No hace falta llamar a los DirectoryArea y userGroups porque los propios request ya lo
+    // llaman
+    Clock.getInstance().start();
     new WebServer();
   }
 }

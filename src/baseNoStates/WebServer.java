@@ -1,10 +1,9 @@
 package baseNoStates;
 
 import baseNoStates.requests.Request;
+import baseNoStates.requests.RequestArea;
 import baseNoStates.requests.RequestReader;
 import baseNoStates.requests.RequestRefresh;
-import baseNoStates.requests.RequestArea;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,13 +19,14 @@ import java.util.StringTokenizer;
 // http://www.jcgonzalez.com/java-socket-mini-server-http-example
 public class WebServer {
   private static final int PORT = 8080; // port to listen connection
-  private static final DateTimeFormatter formatter =
-          DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+  private static final DateTimeFormatter FORMATTER =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
   public WebServer() {
     try {
       ServerSocket serverConnect = new ServerSocket(PORT);
-      System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
+      System.out.println(
+          "Server started.\nListening for connections on port : " + PORT + " ...\n");
       // we listen until user halts server execution
       while (true) {
         // each client connection will be managed in a dedicated Thread
@@ -37,7 +37,6 @@ public class WebServer {
       System.err.println("Server Connection error : " + e.getMessage());
     }
   }
-
 
   private class SocketThread extends Thread {
     // as an inner class, SocketThread sees WebServer attributes
@@ -132,7 +131,7 @@ public class WebServer {
           request = makeRequestArea(tokens);
           break;
         case "get_children":
-          //TODO: this is to be implemented when programming the mobile app in Flutter
+          // TODO: this is to be implemented when programming the mobile app in Flutter
           // in order to navigate the hierarchy of partitions, spaces and doors
           assert false : "request get_children is not yet implemented";
           request = null;
@@ -150,7 +149,7 @@ public class WebServer {
     private RequestReader makeRequestReader(String[] tokens) {
       String credential = tokens[2];
       String action = tokens[4];
-      LocalDateTime dateTime = LocalDateTime.parse(tokens[6], formatter);
+      LocalDateTime dateTime = LocalDateTime.parse(tokens[6], FORMATTER);
       String doorId = tokens[8];
       return new RequestReader(credential, action, dateTime, doorId);
     }
@@ -158,7 +157,7 @@ public class WebServer {
     private RequestArea makeRequestArea(String[] tokens) {
       String credential = tokens[2];
       String action = tokens[4];
-      LocalDateTime dateTime = LocalDateTime.parse(tokens[6], formatter);
+      LocalDateTime dateTime = LocalDateTime.parse(tokens[6], FORMATTER);
       String areaId = tokens[8];
       return new RequestArea(credential, action, dateTime, areaId);
     }
@@ -180,7 +179,5 @@ public class WebServer {
       answer += request.answerToJson().toString();
       return answer;
     }
-
   }
-
 }

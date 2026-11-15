@@ -4,20 +4,28 @@ import java.time.LocalDateTime;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
-//patró observer. Classes implicades: Clock i UnlockedShortly.
+
+// patró observer. Classes implicades: Clock i UnlockedShortly.
 // Executa un Timer en paral·lel que notifica cada segon als estats UnlockedShortly subscrits
 // sense bloquejar l'execució del servidor principal.
 public class Clock extends Observable {
+  private static final Clock UNIQUE_INSTANCE = new Clock(1);
   private LocalDateTime date;
-  private Timer timer;
-  private int period;
+  private final Timer timer;
+  private final int period;
 
-  public Clock(int period) {
+  private Clock(int period) {
     this.period = period;
     timer = new Timer();
   }
+
+  public static Clock getInstance() {
+    return UNIQUE_INSTANCE;
+  }
+
   public void start() {
     TimerTask repeatedTask = new TimerTask() {
+      @Override
       public void run() {
         date = LocalDateTime.now();
         setChanged();
@@ -25,9 +33,18 @@ public class Clock extends Observable {
         System.out.println("run() executed at " + date);
       }
     };
-    timer.scheduleAtFixedRate(repeatedTask, 0, 1000 * period);
+    timer.scheduleAtFixedRate(repeatedTask, 0, 1000L * period);
   }
-  public void stop() { timer.cancel(); }
-  public int getPeriod() { return period; }
-  public LocalDateTime getDate() { return date; }
+
+  public void stop() {
+    timer.cancel();
+  }
+
+  public int getPeriod() {
+    return period;
+  }
+
+  public LocalDateTime getDate() {
+    return date;
+  }
 }

@@ -2,23 +2,24 @@ package baseNoStates;
 
 import baseNoStates.areas.Area;
 import baseNoStates.areas.Space;
-
+import baseNoStates.visitor.GetSpacesVisitor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
 // Centralitza els permisos d'accés d'un rol (àrees permeses, accions i horari Schedule)
 // per compartir-los entre tots els usuaris del mateix grup sense duplicar informació a cada User.
 public class UserGroup {
   private final ArrayList<User> users;
   private final String groupName;
-  private ArrayList<Area> areas;
-  private ArrayList<String> actions;
+  private final ArrayList<Area> areas;
+  private final ArrayList<String> actions;
   private Schedule schedule;
 
   public UserGroup(String name) {
     this.groupName = name;
-    users = new ArrayList<User>();
-    areas = new ArrayList<Area>();
-    actions = new ArrayList<String>();
+    users = new ArrayList<>();
+    areas = new ArrayList<>();
+    actions = new ArrayList<>();
   }
 
   public User findUserByCredential(String credential) {
@@ -32,7 +33,9 @@ public class UserGroup {
 
   public boolean canBeInSpace(Space sp) {
     for (Area area : areas) {
-      if (area.getSpaces().contains(sp)) {
+      GetSpacesVisitor visitor = new GetSpacesVisitor();
+      area.acceptVisitor(visitor);
+      if (visitor.getSpaces().contains(sp)) {
         return true;
       }
     }
@@ -45,10 +48,7 @@ public class UserGroup {
 
   public boolean canDoActionNow(LocalDateTime now) {
     if (schedule != null) {
-      if (schedule.canSendRequests(now)) {
-        return true;
-      }
-      return false;
+      return schedule.canSendRequests(now);
     }
     return true;
   }

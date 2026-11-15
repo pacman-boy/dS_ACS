@@ -3,15 +3,25 @@ package baseNoStates;
 import baseNoStates.areas.Area;
 import baseNoStates.areas.Partition;
 import baseNoStates.areas.Space;
-
+import baseNoStates.visitor.FindAreaByIdVisitor;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 // Construeix i manté l'arbre jeràrquic d'àrees (rootArea) i la llista de portes de l'edifici
 public final class DirectoryAreas {
-  private static ArrayList<Door> allDoors;
-  private static Area rootArea;
+  private static final DirectoryAreas UNIQUE_INSTANCE = new DirectoryAreas();
+  private ArrayList<Door> allDoors;
+  private Area rootArea;
 
-  public static void makeAreas() {
+  private DirectoryAreas() {
+    makeAreas();
+  }
+
+  public static DirectoryAreas getInstance() {
+    return UNIQUE_INSTANCE;
+  }
+
+  private void makeAreas() {
     // Areas
     Space exterior = new Space("exterior");
     Space stairs = new Space("stairs");
@@ -74,11 +84,13 @@ public final class DirectoryAreas {
     allDoors = new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5, d6, d7, d8, d9));
   }
 
-  public static Area findAreaById(String id) {
-    return rootArea.findAreabyId(id);
+  public Area findAreaById(String id) {
+    FindAreaByIdVisitor visitor = new FindAreaByIdVisitor(id);
+    rootArea.acceptVisitor(visitor);
+    return visitor.getFoundArea();
   }
 
-  public static Door findDoorById(String id) {
+  public Door findDoorById(String id) {
     for (Door door : allDoors) {
       if (door.getId().equals(id)) {
         return door;
@@ -89,9 +101,8 @@ public final class DirectoryAreas {
   }
 
   // this is needed by RequestRefresh
-  public static ArrayList<Door> getAllDoors() {
+  public ArrayList<Door> getAllDoors() {
     System.out.println(allDoors);
     return allDoors;
   }
-
 }

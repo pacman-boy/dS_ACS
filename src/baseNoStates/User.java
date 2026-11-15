@@ -1,11 +1,10 @@
 package baseNoStates;
 
-import baseNoStates.areas.Area;
 import baseNoStates.areas.Space;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-// Representa un usuari individual i delega les comprovacions de permisos (espai, acció i horari) al seu UserGroup
+
+// Representa un usuari individual i delega les comprovacions de permisos (espai, acció i horari)
+// al seu UserGroup
 public class User {
   private final String name;
   private final String credential;
@@ -16,14 +15,16 @@ public class User {
     this.credential = credential;
   }
 
-  public boolean canBeInSpace(Space sp) { // Comprova si l'usuari pot estar en l'espai comprovant les areas del seu grup.
+  // Comprova si l'usuari pot estar en l'espai comprovant les areas del seu grup.
+  public boolean canBeInSpace(Space sp) {
     if (userGroup == null) {
       return false;
     }
     return userGroup.canBeInSpace(sp);
   }
 
-  public boolean canDoAction(String action) { // Comprova si l'usuari pot fer una accio comprovant les accions del seu grup.
+  // Comprova si l'usuari pot fer una accio comprovant les accions del seu grup.
+  public boolean canDoAction(String action) {
     if (userGroup == null) {
       return false;
     }
@@ -46,8 +47,7 @@ public class User {
     return "User{name=" + name + ", credential=" + credential + "}";
   }
 
-  public void setUserGroup(UserGroup userGroup){
+  public void setUserGroup(UserGroup userGroup) {
     this.userGroup = userGroup;
   }
-
 }

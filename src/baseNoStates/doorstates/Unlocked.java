@@ -1,11 +1,13 @@
 package baseNoStates.doorstates;
 
 import baseNoStates.Door;
-//Permet obrir i tancar la porta, i bloquejar-la només si està físicament tancada.
+
+// Permet obrir i tancar la porta, i bloquejar-la només si està físicament tancada.
 
 public class Unlocked extends DoorState {
-  public Unlocked(Door door){
-    super(door); // Llama al constructor de la clase padre (DoorState) para guardar la referencia de la puerta.
+  public Unlocked(Door door) {
+    // Llama al constructor de la clase padre (DoorState) para guardar la referencia de la puerta.
+    super(door);
     state = States.UNLOCKED;
   }
 
@@ -43,6 +45,7 @@ public class Unlocked extends DoorState {
 
   @Override
   public void unlockShortly() {
-    System.out.println("Can't unlock shortly door " + door.getId() + " because it's already unlocked");
+    System.out.println(
+        "Can't unlock shortly door " + door.getId() + " because it's already unlocked");
   }
 }

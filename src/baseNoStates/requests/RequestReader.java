@@ -1,10 +1,11 @@
 package baseNoStates.requests;
 
-import baseNoStates.*;
-
+import baseNoStates.DirectoryAreas;
+import baseNoStates.DirectoryUserGroups;
+import baseNoStates.Door;
+import baseNoStates.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -43,24 +44,24 @@ public class RequestReader implements Request {
     reasons.add(reason);
   }
 
-
   @Override
   public String toString() {
     if (userName == null) {
       userName = "unknown";
     }
     return "Request{"
-            + "credential=" + credential
-            + ", userName=" + userName
-            + ", action=" + action
-            + ", now=" + now
-            + ", doorID=" + doorId
-            + ", closed=" + doorClosed
-            + ", authorized=" + authorized
-            + ", reasons=" + reasons
-            + "}";
+        + "credential=" + credential
+        + ", userName=" + userName
+        + ", action=" + action
+        + ", now=" + now
+        + ", doorID=" + doorId
+        + ", closed=" + doorClosed
+        + ", authorized=" + authorized
+        + ", reasons=" + reasons
+        + "}";
   }
 
+  @Override
   public JSONObject answerToJson() {
     JSONObject json = new JSONObject();
     json.put("authorized", authorized);
@@ -74,19 +75,22 @@ public class RequestReader implements Request {
 
   // see if the request is authorized and put this into the request, then send it to the door.
   // if authorized, perform the action.
+  @Override
   public void process() {
-    User user = DirectoryUserGroups.findUserByCredential(credential);
-    Door door = DirectoryAreas.findDoorById(doorId);
+    User user = DirectoryUserGroups.getInstance().findUserByCredential(credential);
+    Door door = DirectoryAreas.getInstance().findDoorById(doorId);
     assert door != null : "door " + doorId + " not found";
     authorize(user, door);
-    // this sets the boolean authorize a y que parte del codigo comprueba al hcaer reader las acciones de ese grupo?ttribute of the request
+    // this sets the boolean authorize attribute of the request
     door.processRequest(this);
     // even if not authorized we process the request, so that if desired we could log all
     // the requests made to the server as part of processing the request
     doorClosed = door.isClosed();
   }
 
-  private void authorize(User user, Door door) { // Comprobar si el usuario tiene permiso para acceder a la puerta segun su grupo y la accion que quiere realizar.
+  // Comprobar si el usuario tiene permiso para acceder a la puerta segun su grupo
+  // y la accion que quiere realizar.
+  private void authorize(User user, Door door) {
     if (user == null) { // Compravacion que exista el usuario
       authorized = false;
       addReason("user doesn't exists");
@@ -95,7 +99,7 @@ public class RequestReader implements Request {
     // user (Who)
 
     // ¿User puede hacer la accion ahora? (When)
-    if (!user.canDoActionNow(now)) {
+    if (!user.canDoActionNow(now)) { // canSendRequests en el PDF
       addReason("User cannot do " + action + " now");
       return;
     }
@@ -122,4 +126,3 @@ public class RequestReader implements Request {
     authorized = true;
   }
 }
-
