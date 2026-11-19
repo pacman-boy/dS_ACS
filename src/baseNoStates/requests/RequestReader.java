@@ -40,6 +40,22 @@ public class RequestReader implements Request {
     return authorized;
   }
 
+  public String getUserName() {
+    return userName != null ? userName : "unknown";
+  }
+
+  public LocalDateTime getNow() {
+    return now;
+  }
+
+  public String getDoorId() {
+    return doorId;
+  }
+
+  public ArrayList<String> getReasons() {
+    return reasons;
+  }
+
   public void addReason(String reason) {
     reasons.add(reason);
   }
@@ -92,15 +108,17 @@ public class RequestReader implements Request {
   // y la accion que quiere realizar.
   private void authorize(User user, Door door) {
     if (user == null) { // Compravacion que exista el usuario
+      userName = "unknown";
       authorized = false;
       addReason("user doesn't exists");
       return;
     }
+    userName = user.getName();
     // user (Who)
 
     // ¿User puede hacer la accion ahora? (When)
     if (!user.canDoActionNow(now)) { // canSendRequests en el PDF
-      addReason("User cannot do " + action + " now");
+      addReason("Present date and/or time not in schedule");
       return;
     }
 
@@ -112,13 +130,13 @@ public class RequestReader implements Request {
 
     // ¿User puede estar en el Space(To)? (Where)
     if (!user.canBeInSpace(door.getToSpace())) {
-      addReason("User cannot be in space " + door.getToSpace().getId());
+      addReason("Not allowed destination " + door.getToSpace().getId());
       return;
     }
 
     // Comprobación de la acción permitida (What)
     if (!user.canDoAction(action)) {
-      addReason("User cannot do " + action);
+      addReason("Not allowed action " + action);
       return;
     }
 

@@ -2,10 +2,14 @@ package baseNoStates;
 
 import baseNoStates.areas.Space;
 import java.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Representa un usuari individual i delega les comprovacions de permisos (espai, acció i horari)
 // al seu UserGroup
 public class User {
+  private static final Logger logger = LoggerFactory.getLogger(User.class);
+
   private final String name;
   private final String credential;
   private UserGroup userGroup;
@@ -13,6 +17,10 @@ public class User {
   public User(String name, String credential) {
     this.name = name;
     this.credential = credential;
+  }
+
+  public String getName() {
+    return name;
   }
 
   // Comprova si l'usuari pot estar en l'espai comprovant les areas del seu grup.

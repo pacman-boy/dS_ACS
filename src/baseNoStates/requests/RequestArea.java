@@ -2,7 +2,9 @@ package baseNoStates.requests;
 
 import baseNoStates.Actions;
 import baseNoStates.DirectoryAreas;
+import baseNoStates.DirectoryUserGroups;
 import baseNoStates.Door;
+import baseNoStates.User;
 import baseNoStates.areas.Area;
 import baseNoStates.visitor.GetDoorsGivingAccessVisitor;
 import java.time.LocalDateTime;
@@ -18,6 +20,7 @@ public class RequestArea implements Request {
   private final String areaId;
   private final LocalDateTime now;
   private final ArrayList<RequestReader> requests = new ArrayList<>();
+  private String userName;
 
   public RequestArea(String credential, String action, LocalDateTime now, String areaId) {
     this.credential = credential;
@@ -30,6 +33,38 @@ public class RequestArea implements Request {
 
   public String getAction() {
     return action;
+  }
+
+  public String getAreaId() {
+    return areaId;
+  }
+
+  public LocalDateTime getNow() {
+    return now;
+  }
+
+  public String getUserName() {
+    if (userName == null) {
+      User user = DirectoryUserGroups.getInstance().findUserByCredential(credential);
+      userName = (user != null) ? user.getName() : "unknown";
+    }
+    return userName;
+  }
+
+  public boolean isAuthorized() {
+    if (requests.isEmpty()) {
+      return false;
+    }
+    for (RequestReader rd : requests) {
+      if (!rd.isAuthorized()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public ArrayList<RequestReader> getRequests() {
+    return requests;
   }
 
   @Override
@@ -64,6 +99,7 @@ public class RequestArea implements Request {
 
   @Override
   public void process() { // Lock and Unlock all dors in one Partition
+    getUserName(); // inicialitza userName
     Area area = DirectoryAreas.getInstance().findAreaById(areaId);
     if (area != null) {
       GetDoorsGivingAccessVisitor visitor = new GetDoorsGivingAccessVisitor();
