@@ -20,6 +20,7 @@ public class Partition extends Area { // Conjunto de Spaces: Basement, ground fl
     return this.id;
   }
 
+  // Patro Visitor: se visita a si misma y luego propaga el visitante a cada hijo
   @Override
   public void acceptVisitor(Visitor visitor) {
     visitor.visitPartition(this);

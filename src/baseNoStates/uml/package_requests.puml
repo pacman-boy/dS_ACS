@@ -10,7 +10,7 @@ package requests {
     }
 
     class RequestRefresh implements Request {
-    - jsonDoors : JSONObject[]
+    - jsonsDoors : JSONObject[]
     + answerToJson() : JSONObject
     + process()
     + toString() : String
@@ -25,6 +25,8 @@ package requests {
     - authorized : boolean
     - reasons : String[]
     - doorStateName : String
+    - doorClosed : boolean
+    + RequestReader(credential : String, action : String, now : LocalDateTime, doorId : String)
     + answerToJson() : JSONObject
     + process()
     - authorize(user : User, door : Door)
@@ -32,6 +34,11 @@ package requests {
     + setDoorStateName(name : String)
     + getAction() : String
     + isAuthorized() : boolean
+    + getUserName() : String
+    + getNow() : LocalDateTime
+    + getDoorId() : String
+    + getReasons() : String[]
+    + addReason(reason : String)
     }
 
     class RequestArea implements Request {
@@ -39,12 +46,19 @@ package requests {
     - action : String
     - now : LocalDateTime
     - areaId : String
-    - requestsReader : RequestReader[]
+    - requests : RequestReader[]
+    - userName : String
+    + RequestArea(credential : String, action : String, now : LocalDateTime, areaId : String)
     + answerToJson() : JSONObject
     + process()
+    + toString() : String
     + getAction() : String
+    + getAreaId() : String
+    + getNow() : LocalDateTime
+    + getUserName() : String
+    + isAuthorized() : boolean
+    + getRequests() : RequestReader[]
     }
 }
-
 
 @enduml

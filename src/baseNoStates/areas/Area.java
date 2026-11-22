@@ -18,5 +18,6 @@ public abstract class Area { // Tiene tanto Partitions como Spaces
 
   public abstract String getId();
 
+  // Patro Visitor: delega el recorrido del arbol al objeto visitante sin conocer el algoritmo
   public abstract void acceptVisitor(Visitor visitor);
 }

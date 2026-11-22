@@ -105,6 +105,7 @@ public class RequestArea implements Request {
     getUserName(); // inicialitza userName
     Area area = DirectoryAreas.getInstance().findAreaById(areaId);
     if (area != null) {
+      // Patro Visitor: extrae todas las puertas de los espacios del area
       GetDoorsGivingAccessVisitor visitor = new GetDoorsGivingAccessVisitor();
       area.acceptVisitor(visitor);
       for (Door door : visitor.getDoors()) {

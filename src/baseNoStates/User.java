@@ -23,17 +23,19 @@ public class User {
     return name;
   }
 
-  // Comprova si l'usuari pot estar en l'espai comprovant les areas del seu grup.
+  // Comprova si l'usuari pot estar en l'espai comprovant les àrees del seu grup.
   public boolean canBeInSpace(Space sp) {
     if (userGroup == null) {
+      logger.warn("User {} has no group assigned to check space {}", name, sp.getId());
       return false;
     }
     return userGroup.canBeInSpace(sp);
   }
 
-  // Comprova si l'usuari pot fer una accio comprovant les accions del seu grup.
+  // Comprova si l'usuari pot fer una acció comprovant les accions del seu grup.
   public boolean canDoAction(String action) {
     if (userGroup == null) {
+      logger.warn("User {} has no group assigned to check action {}", name, action);
       return false;
     }
     return userGroup.canDoAction(action);
@@ -41,6 +43,7 @@ public class User {
 
   public boolean canDoActionNow(LocalDateTime now) {
     if (userGroup == null) {
+      logger.warn("User {} has no group assigned to check schedule at {}", name, now);
       return false;
     }
     return userGroup.canDoActionNow(now);

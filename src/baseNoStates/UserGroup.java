@@ -34,6 +34,7 @@ public class UserGroup {
     return null;
   }
 
+  // Patro Visitor: obtiene todos los Space del area para comprobar si sp esta permitido
   public boolean canBeInSpace(Space sp) {
     for (Area area : areas) {
       GetSpacesVisitor visitor = new GetSpacesVisitor();

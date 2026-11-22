@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public final class DirectoryUserGroups {
   private static final Logger logger = LoggerFactory.getLogger(DirectoryUserGroups.class);
+  // Patro Singleton: catalogo unico de grupos de usuarios y sus permisos
   private static final DirectoryUserGroups UNIQUE_INSTANCE = new DirectoryUserGroups();
   private final ArrayList<UserGroup> userGroups = new ArrayList<>();
 
@@ -17,6 +18,7 @@ public final class DirectoryUserGroups {
     makeUsersGroups();
   }
 
+  // Punto de acceso global al Singleton
   public static DirectoryUserGroups getInstance() {
     return UNIQUE_INSTANCE;
   }

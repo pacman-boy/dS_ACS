@@ -8,9 +8,7 @@ class Main {
 }
 
 note right of Main::main
-DirectoryAreas.makeAreas()
-DirectoryUserGroups.makeUsersGroups()
-Door.getClock().start()
+Clock.getInstance().start()
 new WebServer()
 end note
 
@@ -25,6 +23,7 @@ class SocketThread {
 - makeRequest(tokens : String[]) : Request
 - makeRequestReader(tokens : String[]) : RequestReader
 - makeRequestArea(tokens : String[]) : RequestArea
+- logActivity(request : Request)
 - makeHeaderAnswer() : String
 - makeJsonAnswer(request : Request) : String
 + run()
@@ -38,31 +37,30 @@ of WebServer
 end note
 
 class DirectoryAreas {
-- {static} rootArea : Area
-- {static} allDoors : Door[]
-+ {static} makeAreas()
-+ {static} findAreaById(id : String) : Area
-+ {static} findDoorById(id : String) : Door
-+ {static} getAllDoors() : Door[]
+- {static} UNIQUE_INSTANCE : DirectoryAreas
+- rootArea : Area
+- allDoors : Door[]
+- DirectoryAreas()
++ {static} getInstance() : DirectoryAreas
+- makeAreas()
++ findAreaById(id : String) : Area
++ findDoorById(id : String) : Door
++ getAllDoors() : Door[]
 }
 
 package areas {
   abstract class Area {
   # id : String
   + Area(id : String)
-  + {abstract} getDoorsGivingAccess() : Door[]
-  + {abstract} findAreabyId(id : String) : Area
-  + {abstract} getSpaces() : Space[]
-  + {abstract} getId() : String
+  + getId() : String
+  + {abstract} acceptVisitor(visitor : Visitor)
   }
 
   class Partition extends Area {
   - area : Area[]
   + Partition(id : String)
-  + getDoorsGivingAccess() : Door[]
-  + findAreabyId(id : String) : Area
-  + getSpaces() : Space[]
   + getId() : String
+  + acceptVisitor(visitor : Visitor)
   + addArea(area : Area)
   }
 
@@ -70,19 +68,56 @@ package areas {
   - doors : Door[]
   + Space(id : String)
   + getDoorsGivingAccess() : Door[]
-  + findAreabyId(id : String) : Area
-  + getSpaces() : Space[]
   + getId() : String
+  + acceptVisitor(visitor : Visitor)
   + addDoor(door : Door)
   }
 
   Partition *--> "*" Area : "area"
 }
 
+package visitor {
+  interface Visitor {
+  + {abstract} visitSpace(space : Space)
+  + {abstract} visitPartition(partition : Partition)
+  }
+
+  class FindAreaByIdVisitor implements Visitor {
+  - id : String
+  - foundArea : Area
+  + FindAreaByIdVisitor(id : String)
+  + getFoundArea() : Area
+  + visitSpace(space : Space)
+  + visitPartition(partition : Partition)
+  }
+
+  class GetDoorsGivingAccessVisitor implements Visitor {
+  - doors : Door[]
+  + getDoors() : Door[]
+  + visitSpace(space : Space)
+  + visitPartition(partition : Partition)
+  }
+
+  class GetSpacesVisitor implements Visitor {
+  - spaces : Space[]
+  + getSpaces() : Space[]
+  + visitSpace(space : Space)
+  + visitPartition(partition : Partition)
+  }
+
+  class GetProppedDoorsVisitor implements Visitor {
+  - proppedDoors : Door[]
+  + getProppedDoors() : Door[]
+  + visitSpace(space : Space)
+  + visitPartition(partition : Partition)
+  }
+}
+
+Area ..> Visitor : "accepts"
+
 class Door {
 - id : String
 - closed : boolean
-- {static} clock : Clock
 + Door(id : String, from : Space, to : Space)
 + processRequest(request : RequestReader)
 + setState(state : DoorState)
@@ -94,10 +129,10 @@ class Door {
 + getState() : DoorState
 + getFromSpace() : Space
 + getToSpace() : Space
-+ {static} getClock() : Clock
 - doAction(action : String)
 }
 
+DirectoryAreas --> "1" DirectoryAreas : "UNIQUE_INSTANCE"
 DirectoryAreas --> "1" Area : "rootArea"
 DirectoryAreas --> "*" Door : "allDoors"
 Space --> "*" Door : "doors"
@@ -172,10 +207,12 @@ package doorstates {
 }
 
 class Clock {
+- {static} UNIQUE_INSTANCE : Clock
 - date : LocalDateTime
 - timer : Timer
 - period : int
-+ Clock(period : int)
+- Clock(period : int)
++ {static} getInstance() : Clock
 + start()
 + stop()
 + getPeriod() : int
@@ -183,13 +220,16 @@ class Clock {
 }
 
 Door "1" <--> "1" DoorState : "door / state"
-Door --> "1" Clock : "clock"
 UnlockedShortly ..> Clock : "observes"
+Clock --> "1" Clock : "UNIQUE_INSTANCE"
 
 class DirectoryUserGroups {
-- {static} userGroups : UserGroup[]
-+ {static} makeUsersGroups()
-+ {static} findUserByCredential(credential : String) : User
+- {static} UNIQUE_INSTANCE : DirectoryUserGroups
+- userGroups : UserGroup[]
+- DirectoryUserGroups()
++ {static} getInstance() : DirectoryUserGroups
+- makeUsersGroups()
++ findUserByCredential(credential : String) : User
 }
 
 class UserGroup {
@@ -211,6 +251,7 @@ class User {
 - name : String
 - credential : String
 + User(name : String, credential : String)
++ getName() : String
 + canBeInSpace(sp : Space) : boolean
 + canDoAction(action : String) : boolean
 + canDoActionNow(now : LocalDateTime) : boolean
@@ -229,6 +270,7 @@ class Schedule {
 + canSendRequests(now : LocalDateTime) : boolean
 }
 
+DirectoryUserGroups --> "1" DirectoryUserGroups : "UNIQUE_INSTANCE"
 DirectoryUserGroups o--> "1..*" UserGroup : "userGroups"
 UserGroup "1" *--> "*" User : "users"
 UserGroup --> "*" Area : "areas"

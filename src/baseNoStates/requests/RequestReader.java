@@ -8,11 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RequestReader implements Request {
-  private static final Logger logger = LoggerFactory.getLogger(RequestReader.class);
   private final String credential; // who
   private final String action;     // what
   private final LocalDateTime now; // when

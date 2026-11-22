@@ -24,6 +24,7 @@ public class Space extends Area { // Espacios individuales: Parking, room 1...
     return this.id;
   }
 
+  // Patro Visitor: nodo hoja, solo llama a visitSpace sobre si mismo
   @Override
   public void acceptVisitor(Visitor visitor) {
     visitor.visitSpace(this);

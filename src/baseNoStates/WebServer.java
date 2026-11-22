@@ -26,8 +26,7 @@ public class WebServer {
       DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
   public WebServer() {
-    try {
-      ServerSocket serverConnect = new ServerSocket(PORT);
+    try (ServerSocket serverConnect = new ServerSocket(PORT)) {
       logger.info("Server started. Listening for connections on port : {} ...", PORT);
       // we listen until user halts server execution
       while (true) {
@@ -40,7 +39,7 @@ public class WebServer {
     }
   }
 
-  private class SocketThread extends Thread {
+  private static class SocketThread extends Thread {
     // as an inner class, SocketThread sees WebServer attributes
     private final Socket insocked; // client connection via Socket class
 
@@ -120,22 +119,30 @@ public class WebServer {
       }
     }
 
+    // Guarda en activity.log la peticion segun su tipo
     private void logActivity(Request request) {
       if (request instanceof RequestRefresh) {
+        // El simulador pide el estado actual de todas las puertas
         logger.info("refresh");
-      } else if (request instanceof RequestArea) {
-        RequestArea ra = (RequestArea) request;
+      } else if (request instanceof RequestArea ra) {
+        // Un usuario quiere bloquear o desbloquear todas las puertas de una Zona (areaId)
         String dateTimeStr = ra.getNow().format(FORMATTER);
         logger.info("Request area\nuserName {} action {} datetime {}\nareaId {} authorized {}",
             ra.getUserName(), ra.getAction(), dateTimeStr, ra.getAreaId(), ra.isAuthorized());
-      } else if (request instanceof RequestReader) {
-        RequestReader rr = (RequestReader) request;
+      } else if (request instanceof RequestReader rr) {
+        // Un usuario interactua con una puerta concreta (doorId)
         String dateTimeStr = rr.getNow().format(FORMATTER);
         if (rr.isAuthorized()) {
-          logger.info("Request reader\nuserName {} action {} datetime {}\ndoorId {} authorized true",
+          logger.info(
+              "Request reader\nuserName {} action {} datetime {}\ndoorId {} authorized true",
               rr.getUserName(), rr.getAction(), dateTimeStr, rr.getDoorId());
         } else {
-          logger.info("Request reader\nuserName {} action {} datetime {}\ndoorId {} authorized false reasons {}",
+          logger.info(
+              """
+              Request reader
+              userName {} action {} datetime {}
+              doorId {} authorized false reasons {}\
+              """,
               rr.getUserName(), rr.getAction(), dateTimeStr, rr.getDoorId(), rr.getReasons());
         }
       }

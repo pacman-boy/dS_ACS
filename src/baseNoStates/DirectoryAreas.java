@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 // Construeix i manté l'arbre jeràrquic d'àrees (rootArea) i la llista de portes de l'edifici
 public final class DirectoryAreas {
   private static final Logger logger = LoggerFactory.getLogger(DirectoryAreas.class);
+  // Patro Singleton: catalogo unico de areas y puertas del edificio
   private static final DirectoryAreas UNIQUE_INSTANCE = new DirectoryAreas();
   private ArrayList<Door> allDoors;
   private Area rootArea;
@@ -20,6 +21,7 @@ public final class DirectoryAreas {
     makeAreas();
   }
 
+  // Punto de acceso global al Singleton
   public static DirectoryAreas getInstance() {
     return UNIQUE_INSTANCE;
   }
@@ -87,6 +89,7 @@ public final class DirectoryAreas {
     allDoors = new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5, d6, d7, d8, d9));
   }
 
+  // Usa FindAreaByIdVisitor para buscar el area en el arbol sin acoplar la logica a Area
   public Area findAreaById(String id) {
     FindAreaByIdVisitor visitor = new FindAreaByIdVisitor(id);
     rootArea.acceptVisitor(visitor);

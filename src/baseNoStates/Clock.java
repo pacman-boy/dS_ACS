@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 // sense bloquejar l'execució del servidor principal.
 public class Clock extends Observable {
   private static final Logger logger = LoggerFactory.getLogger(Clock.class);
+  // Patro Singleton: unica instancia de reloj compartida por todo el sistema
   private static final Clock UNIQUE_INSTANCE = new Clock(1);
   private LocalDateTime date;
   private final Timer timer;
@@ -22,6 +23,7 @@ public class Clock extends Observable {
     timer = new Timer();
   }
 
+  // Punto de acceso global al Singleton del reloj
   public static Clock getInstance() {
     return UNIQUE_INSTANCE;
   }

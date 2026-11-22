@@ -1,5 +1,6 @@
 <configuration>
 
+  <!-- (Appenders) ¿DÓNDE escribo? -->
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -14,12 +15,14 @@
     </encoder>
   </appender>
 
-  <logger name="baseNoStates.WebServer" level="INFO" additivity="true">
+  <!-- (Loggers) ¿QUÉ dejo pasar y a qué appender lo mando? -->
+  <logger name="baseNoStates.WebServer" level="INFO" additivity="true"> <!-- mensaje viene de Webserver, ignora toodo lo que sea debug -->
     <appender-ref ref="ACTIVITY_FILE" />
   </logger>
 
-  <logger name="baseNoStates" level="DEBUG" />
-  <root level="INFO">
+  <logger name="baseNoStates" level="DEBUG" /> <!-- Permitir todos los logs-->
+
+  <root level="INFO"> <!-- Todo por consola -->
     <appender-ref ref="CONSOLE" />
   </root>
 
