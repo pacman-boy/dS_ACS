@@ -4,11 +4,14 @@ import java.time.LocalDateTime;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // patró observer. Classes implicades: Clock i UnlockedShortly.
 // Executa un Timer en paral·lel que notifica cada segon als estats UnlockedShortly subscrits
 // sense bloquejar l'execució del servidor principal.
 public class Clock extends Observable {
+  private static final Logger logger = LoggerFactory.getLogger(Clock.class);
   private static final Clock UNIQUE_INSTANCE = new Clock(1);
   private LocalDateTime date;
   private final Timer timer;
@@ -30,7 +33,7 @@ public class Clock extends Observable {
         date = LocalDateTime.now();
         setChanged();
         notifyObservers();
-        System.out.println("run() executed at " + date);
+        logger.debug("run() executed at {}", date);
       }
     };
     timer.scheduleAtFixedRate(repeatedTask, 0, 1000L * period);

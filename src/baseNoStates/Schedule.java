@@ -5,10 +5,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Encapsula les restriccions temporals (interval de dates, dies de la setmana i franja horària)
 // en què un UserGroup té permís per enviar peticions.
 public class Schedule {
+  private static final Logger logger = LoggerFactory.getLogger(Schedule.class);
   private final LocalDate startDate;
   private final LocalDate endDate;
   private final ArrayList<DayOfWeek> daysOfWeek;

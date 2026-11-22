@@ -6,9 +6,12 @@ import baseNoStates.areas.Space;
 import baseNoStates.visitor.FindAreaByIdVisitor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Construeix i manté l'arbre jeràrquic d'àrees (rootArea) i la llista de portes de l'edifici
 public final class DirectoryAreas {
+  private static final Logger logger = LoggerFactory.getLogger(DirectoryAreas.class);
   private static final DirectoryAreas UNIQUE_INSTANCE = new DirectoryAreas();
   private ArrayList<Door> allDoors;
   private Area rootArea;
@@ -96,13 +99,13 @@ public final class DirectoryAreas {
         return door;
       }
     }
-    System.out.println("door with id " + id + " not found");
+    logger.warn("Door with id {} not found", id);
     return null; // otherwise we get a Java error
   }
 
   // this is needed by RequestRefresh
   public ArrayList<Door> getAllDoors() {
-    System.out.println(allDoors);
+    logger.debug("All doors: {}", allDoors);
     return allDoors;
   }
 }

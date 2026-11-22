@@ -4,8 +4,11 @@ import baseNoStates.Door;
 import baseNoStates.areas.Partition;
 import baseNoStates.areas.Space;
 import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GetDoorsGivingAccessVisitor implements Visitor {
+  private static final Logger logger = LoggerFactory.getLogger(GetDoorsGivingAccessVisitor.class);
   private final ArrayList<Door> doors = new ArrayList<>();
 
   public ArrayList<Door> getDoors() {

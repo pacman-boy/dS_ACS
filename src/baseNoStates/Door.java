@@ -5,6 +5,8 @@ import baseNoStates.doorstates.DoorState;
 import baseNoStates.doorstates.Unlocked;
 import baseNoStates.requests.RequestReader;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Patró State: delega les accions (open, close, lock, unlock, unlockShortly) al seu estat actual
 // Coneix fromSpace i toSpace perquè RequestReader pugui comprovar si l'usuari té permís en tots
@@ -12,6 +14,7 @@ import org.json.JSONObject;
 // Comparteix una única instància estàtica de Clock entre totes les portes per notificar l'estat
 // UnlockedShortly.
 public class Door {
+  private static final Logger logger = LoggerFactory.getLogger(Door.class);
   private final String id;
   private boolean closed; // physically
   private DoorState state;
@@ -33,7 +36,7 @@ public class Door {
       String action = request.getAction();
       doAction(action);
     } else {
-      System.out.println("not authorized");
+      logger.warn("Request not authorized for door {}", id);
     }
     request.setDoorStateName(getStateName());
   }

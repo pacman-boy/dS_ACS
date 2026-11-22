@@ -3,8 +3,11 @@ package baseNoStates.areas;
 import baseNoStates.Door;
 import baseNoStates.visitor.Visitor;
 import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Space extends Area { // Espacios individuales: Parking, room 1...
+  private static final Logger logger = LoggerFactory.getLogger(Space.class);
   private final ArrayList<Door> doors;
 
   public Space(String id) {

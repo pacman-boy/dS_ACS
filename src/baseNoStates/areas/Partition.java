@@ -2,8 +2,11 @@ package baseNoStates.areas;
 
 import baseNoStates.visitor.Visitor;
 import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Partition extends Area { // Conjunto de Spaces: Basement, ground floor...
+  private static final Logger logger = LoggerFactory.getLogger(Partition.class);
   // Array tipo Area, ya que puede ser tanto Partitions como Spaces
   private final ArrayList<Area> area;
 

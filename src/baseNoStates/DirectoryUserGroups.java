@@ -5,8 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DirectoryUserGroups {
+  private static final Logger logger = LoggerFactory.getLogger(DirectoryUserGroups.class);
   private static final DirectoryUserGroups UNIQUE_INSTANCE = new DirectoryUserGroups();
   private final ArrayList<UserGroup> userGroups = new ArrayList<>();
 
@@ -105,7 +108,7 @@ public final class DirectoryUserGroups {
         return user;
       }
     }
-    System.out.println("user with credential " + credential + " not found");
+    logger.warn("User with credential {} not found", credential);
     return null; // otherwise we get a Java error
   }
 }

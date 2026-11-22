@@ -11,10 +11,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Obté totes les portes que donen accés a l'àrea
 // i processa una RequestReader individual per a cadascuna.
 public class RequestArea implements Request {
+  private static final Logger logger = LoggerFactory.getLogger(RequestArea.class);
   private final String credential;
   private final String action;
   private final String areaId;

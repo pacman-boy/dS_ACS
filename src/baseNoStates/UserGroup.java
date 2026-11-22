@@ -5,10 +5,13 @@ import baseNoStates.areas.Space;
 import baseNoStates.visitor.GetSpacesVisitor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Centralitza els permisos d'accés d'un rol (àrees permeses, accions i horari Schedule)
 // per compartir-los entre tots els usuaris del mateix grup sense duplicar informació a cada User.
 public class UserGroup {
+  private static final Logger logger = LoggerFactory.getLogger(UserGroup.class);
   private final ArrayList<User> users;
   private final String groupName;
   private final ArrayList<Area> areas;
